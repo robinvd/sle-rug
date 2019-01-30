@@ -49,6 +49,11 @@ set[Message] check(AForm f, TEnv tenv, UseDef useDef) {
     }
   }
 
+  UseDef c = {*({src} * {refsrc | /ref(_, src=refsrc) := computed}) | /question(_, name, _, just(computed) src=src) := f};
+  for (<loc x, x> <- (c + useDef)+, <_, x> <- useDef) {
+    msgs += warning("cycle in question", x);
+  }
+
   msgs += {*check(q, tenv, useDef) | q<-f.questions};
 
   return msgs;
@@ -72,6 +77,11 @@ set[Message] check(question(title, name, aty, maybeComputed, src=src), TEnv tenv
     if (ty != tyComputed) {
       msgs += error("could not match (question) type <ty> with <tyComputed>", src);
     }
+
+    // UseDef c = {src} * {refsrc | ref(n, src=refsrc) <- computed};
+    // if (<loc x, x> <- (c + useDef)+) {
+      // msgs += warning("cycle in question <name>", x);
+    // }
   }
 
   return msgs;
