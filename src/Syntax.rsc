@@ -26,14 +26,21 @@ syntax Expr
   = Id \ "true" \ "false" // true/false are reserved keywords.
   | Int
   | Bool
-  | left Expr "*" Expr
-  > left Expr "-" Expr
-  > left Expr "+" Expr
-  > left Expr "\>" Expr
-  > left Expr "\<" Expr
+  | "!" Expr
+  > left
+    ( Expr "*" Expr
+    | left Expr "/" Expr
+    )
+  > left 
+    ( Expr "-" Expr
+    | left Expr "+" Expr
+    )
+  > left 
+    ( Expr "\>" Expr
+    | left Expr "\<" Expr
+    )
   > left Expr "&&" Expr
   > left Expr "||" Expr
-  > "!" Expr
   | "(" Expr ")"
   ;
 
