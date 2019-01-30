@@ -3,11 +3,11 @@ module Transform
 import Resolve;
 import AST;
 
-/* 
+/*
  * Transforming QL forms
  */
- 
- 
+
+
 /* Normalization:
  *  wrt to the semantics of QL the following
  *     q0: "" int; if (a) { if (b) { q1: "" int; } q2: "" int; }
@@ -20,10 +20,15 @@ import AST;
  * Write a transformation that performs this flattening transformation.
  *
  */
- 
-AForm flatten(AForm f) {
-  return f; 
-}
+
+AForm flatten(form(name, qs, src=src)) =
+  form(name, [*flatten(litBool(true), q) | q<-qs], src=src);
+
+list[AQuestion] flatten(AExpr acc, ifquestion(cond, t, f)) =
+  [*flatten(binaryOp(and(), acc, cond), nq) | nq <- t] + 
+  [*flatten(binaryOp(and(), acc, unaryOp(not(), cond)), nq) | nq <- f];
+list[AQuestion] flatten(AExpr acc, question(title, name, ty, comp)) =
+  [ifquestion(acc, [question(title, name, ty, comp)], [])];
 
 /* Rename refactoring:
  *
