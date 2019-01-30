@@ -46,6 +46,7 @@ AExpr cst2ast(Expr e) {
     case (Expr)`<Expr l> + <Expr r>`: return binaryOp(plus(), cst2ast(l), cst2ast(r));
     case (Expr)`<Expr l> - <Expr r>`: return binaryOp(sub(), cst2ast(l), cst2ast(r));
     case (Expr)`<Expr l> * <Expr r>`: return binaryOp(mul(), cst2ast(l), cst2ast(r));
+    case (Expr)`<Expr l> / <Expr r>`: return binaryOp(div(), cst2ast(l), cst2ast(r));
     case (Expr)`<Expr l> \> <Expr r>`: return binaryOp(gt(), cst2ast(l), cst2ast(r));
     case (Expr)`<Expr l> \< <Expr r>`: return binaryOp(lt(), cst2ast(l), cst2ast(r));
     case (Expr)`<Expr l> && <Expr r>`: return binaryOp(and(), cst2ast(l), cst2ast(r));
@@ -58,8 +59,6 @@ AExpr cst2ast(Expr e) {
       default: throw "Unhandled bool: <e>";
     }
     case (Expr)`(<Expr e>)`: return cst2ast(e, src=e@\loc);
-    
-    // etc.
     
     default: throw "Unhandled expression: <e>";
   }
